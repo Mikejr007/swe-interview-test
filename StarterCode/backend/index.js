@@ -6,9 +6,12 @@ const PORT = process.env.PORT || 5001;
 
 app.use(express.json());
 
-//implement the CORS config
+// CORS config
 const cors = require('cors');
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from your frontend
+    methods: 'GET,POST,DELETE',      // Specify allowed methods
+}));
 //products array
 let products = [
     { id: 1, name: 'Product 1', description: 'description 1', price: 100, imageUrl: '' },
@@ -24,7 +27,7 @@ const fetchImageUrl = () => {
     return `https://picsum.photos/200/200?random=${Math.floor(Math.random() * 1000)}`;
 };
 
-//implement the get api for getting products
+// get api for getting products
 app.get('/api/products', (req, res) => {
     const productsImages = products.map(product => ({
         ...product,
@@ -33,7 +36,7 @@ app.get('/api/products', (req, res) => {
     res.json(productsImages);
 });
 
-//implement the delete api for deleting a product by Id
+// delete api for deleting a product by Id
 app.delete('/api/products/:id', (req, res) => {
     const productId = parseInt(req.params.id);
     const index = products.findIndex(p => p.id === productId);
